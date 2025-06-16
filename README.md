@@ -2,6 +2,8 @@
 
 A Debian package that automatically updates APT and Flatpak packages when the system is idle.
 
+This is especially useful if you linux does not come with a program that does automatic updates.
+
 ## Features
 
 - Checks system idle time before running updates
