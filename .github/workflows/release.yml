@@ -1,0 +1,45 @@
+name: Build and Release DEB Package
+
+on:
+  push:
+    tags:
+      - 'v*.*'  # Trigger on tags like v1.0, v2.1, etc.
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Extract version from tag
+        id: get_version
+        run: |
+          # Remove 'v' prefix from tag (e.g., v1.0 -> 1.0)
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update version in control file
+        run: |
+          # Update version in DEBIAN/control file
+          sed -i "s/^Version:.*/Version: $VERSION-1/" DEBIAN/control
+          cat DEBIAN/control
+
+      - name: Build DEB package
+        run: |
+          # Build the package with specified output filename
+          dpkg-deb --build . smart-updater_${VERSION}-1.deb
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: smart-updater_${{ env.VERSION }}-1.deb
+          name: Release v${{ env.VERSION }}
+          tag_name: v${{ env.VERSION }}
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
