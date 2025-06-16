@@ -1,0 +1,6 @@
+[Unit]
+Description=Smart background APT and Flatpak updates
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/smart-updater.sh

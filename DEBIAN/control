@@ -1,0 +1,8 @@
+Package: smart-updater
+Version: replace_with_version
+Section: utils
+Priority: optional
+Architecture: all
+Maintainer: Chris Wild <chris@wildmail.org>
+Description: Automatic background updates for APT and Flatpak when system is idle.
+Depends: xprintidle, flatpak, apt
